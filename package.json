@@ -11,9 +11,10 @@
     "scripts": {},
     "dependencies": {
         "dotenv": "^16.5.0",
-        "viem": "^2.26.5",
+        "ethers": "^6.13.5",
         "ts-node": "^10.9.2",
-        "typescript": "^5.4.5"
+        "typescript": "^5.4.5",
+        "viem": "^2.26.5"
     },
     "devDependencies": {
         "ts-loader": "^9.5.1",
