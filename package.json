@@ -1,0 +1,22 @@
+{
+    "name": "minimal-one-off-7702",
+    "private": false,
+    "displayName": "imAccount SDK",
+    "author": "Alfred Lu",
+    "description": "Perform a minimal example of 7702 account usage which can one-off HEN-SHIN and FUKU-GEN.",
+    "repository": {
+        "url": "https://github.com/chihaolu/minimal-one-off-7702",
+        "type": "git"
+    },
+    "scripts": {},
+    "dependencies": {
+        "dotenv": "^16.5.0",
+        "viem": "^2.26.5",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    },
+    "devDependencies": {
+        "ts-loader": "^9.5.1",
+        "tsconfig-paths": "^4.2.0"
+    }
+}
