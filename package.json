@@ -1,11 +1,11 @@
 {
     "name": "minimal-one-off-7702",
     "private": false,
-    "displayName": "imAccount SDK",
+    "displayName": "Minimal One-Off 7702 Account PoC",
     "author": "Alfred Lu",
     "description": "Perform a minimal example of 7702 account usage which can one-off HEN-SHIN and FUKU-GEN.",
     "repository": {
-        "url": "https://github.com/chihaolu/minimal-one-off-7702",
+        "url": "https://github.com/ChiHaoLu/minimal-one-off-7702",
         "type": "git"
     },
     "scripts": {},

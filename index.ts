@@ -50,13 +50,8 @@ async function main() {
         args: [eoa.address, tokenRecipient, transferAmount],
       }),
     },
-    // TODO: revoke the HEN-SHIN
-    {
-      target: zeroAddress,
-      value: 0n,
-      data: "0x",
-    },
   ];
+  // TODO: revoke the HEN-SHIN
   const hash = await walletClient.writeContract({
     abi: Simple7702AccountMetadata.abi,
     address: eoa.address,
