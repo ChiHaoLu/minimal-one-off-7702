@@ -37,9 +37,13 @@ If your 7702 transaction gas is paid by the relay, you need to use the EntryPoin
 
 ### Must Wait for Block Confirmed
 
+No matter what method we use to compress the 7702 transaction (make some of them atomic exexuting), we should check the depends node have indexed / confirmed the before transaction.
+
 #### Scenario 1
 
 If we sent two 7702 transaction in **very short interval (which means we don't wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49)'s [gas profile](https://dashboard.tenderly.co/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49) only shows from the perspective of EOA and it can not perform the ERC-20 interaction.
+
+> BTW, the token approve and transfer work successfully.
 
 ![alt text](./assets/0xc6.png)
 
