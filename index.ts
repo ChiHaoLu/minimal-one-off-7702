@@ -1,9 +1,9 @@
-import * as readline from "readline";
 import * as dotenv from "dotenv";
 import { Address, encodeFunctionData, erc20Abi, zeroAddress } from "viem";
 import { Simple7702AccountMetadata } from "./artifacts";
-import { eoa, walletClient } from "./utils/config";
+import { eoa, publicClient, walletClient } from "./utils/config";
 import { Call } from "utils/types";
+import { waitForDeposit } from "utils/helper";
 
 dotenv.config();
 const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238" as Address;
@@ -56,7 +56,14 @@ async function main() {
     }),
     to: walletClient.account.address,
   });
+  await publicClient.waitForTransactionReceipt({
+    hash: henShinTxHash,
+  });
   console.log(`Hen-Shin 7702 Transaction hash: ${henShinTxHash}`);
+  let bytecode = await publicClient.getCode({
+    address: walletClient.account.address,
+  });
+  console.log("Bytecode after Hen-Shin: ", bytecode);
 
   const fukuGenAuthorization = await walletClient.signAuthorization({
     executor: "self",
@@ -67,28 +74,14 @@ async function main() {
     authorizationList: [fukuGenAuthorization],
     to: walletClient.account.address,
   });
-  console.log(`Fuku-Gen 7702 Transaction hash: ${fukuGenTxHash}`);
-}
-
-function waitForDeposit(
-  reason: string,
-  address: Address,
-  amountAndTokenStatement: string
-) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+  await publicClient.waitForTransactionReceipt({
+    hash: fukuGenTxHash,
   });
-
-  return new Promise((resolve) =>
-    rl.question(
-      `For ${reason}, \nplease deposit at least ${amountAndTokenStatement} in your address: ${address}. \n After deposit, please press Enter.`,
-      (ans) => {
-        rl.close();
-        resolve(ans);
-      }
-    )
-  );
+  console.log(`Fuku-Gen 7702 Transaction hash: ${fukuGenTxHash}`);
+  bytecode = await publicClient.getCode({
+    address: walletClient.account.address,
+  });
+  console.log("Bytecode after Fuku-Gen: ", bytecode);
 }
 
 main()

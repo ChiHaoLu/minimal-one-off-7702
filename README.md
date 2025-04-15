@@ -38,11 +38,17 @@
 
 ## Rationale
 
-- If your 7702 transaction gas is paid by the relay, you need to use the EntryPoint because the `execute` function requires the `msg.sender` should be `self` or `EntryPoint`. ([reference](https://github.com/eth-infinitism/account-abstraction/blob/develop/contracts/accounts/Simple7702Account.sol#L43))
+### Pay by Relay
 
-## Gas Profile
+If your 7702 transaction gas is paid by the relay, you need to use the EntryPoint because the `execute` function requires the `msg.sender` should be `self` or `EntryPoint`. ([reference](https://github.com/eth-infinitism/account-abstraction/blob/develop/contracts/accounts/Simple7702Account.sol#L43))
 
-Example result:
+### Must Wait for Block Confirmed
+
+#### Scenario 1
+
+If we sent two 7702 transaction in **very short interval (which means we don't wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49)'s [gas profile](https://dashboard.tenderly.co/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49) only shows from the perspective of EOA and it can not perform the ERC-20 interaction.
+
+And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604) could not be sent successfully.
 
 ```
 {
@@ -55,6 +61,10 @@ Example result:
   yParity: 1
 }
 Hen-Shin 7702 Transaction hash: 0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49
+Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
+
+Without waiting here, do the Fuku-Gen instantly...
+
 {
   address: '0x0000000000000000000000000000000000000000',
   chainId: 11155111,
@@ -65,6 +75,46 @@ Hen-Shin 7702 Transaction hash: 0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09
   yParity: 0
 }
 Fuku-Gen 7702 Transaction hash: 0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604
+Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
 ```
 
-Use Tenderly’s gas profiling tools for analysis.
+#### Scenario 2
+
+If we sent two 7702 transaction with **an interval (which means we wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2)'s [gas profile](https://dashboard.tenderly.co/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2) can shows from the perspective of CA.
+
+And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)([gas profile](https://dashboard.tenderly.co/tx/sepolia/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)) can be sent successfully.
+
+```
+{
+  address: '0x4Cd241E8d1510e30b2076397afc7508Ae59C66c9',
+  chainId: 11155111,
+  nonce: 340,
+  r: '0x2fe543903ab8a93074f7c86020571dfed1f3f08774b56226daf3a72712d99be6',
+  s: '0x04c1bae4eaed26a4ec6696e6444d32dcc86e0c19b139b8c8b79a71b9b339d535',
+  v: 28n,
+  yParity: 1
+}
+Hen-Shin 7702 Transaction hash: 0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2
+Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
+
+Wait for few minutes...
+
+{
+  address: '0x0000000000000000000000000000000000000000',
+  chainId: 11155111,
+  nonce: 342,
+  r: '0xccebbac6c2a1ebee0b8d81b2cf423f5b568095f960faeebc4faeb8e89844e01c',
+  s: '0x112806094e5bec97d7d9eff3cc267f5dd0500c7fdaa26442b1593fa6939a35b8',
+  v: 27n,
+  yParity: 0
+}
+Fuku-Gen 7702 Transaction hash: 0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1
+Bytecode after Fuku-Gen:  undefined
+```
+
+## Gas Profile
+
+| Operaion             | Gas Usage              | Gas Price  | Gas Cost       |
+| -------------------- | ---------------------- | ---------- | -------------- |
+| Hen-Shin + MultiCall | 79,608 / 303,426 (26%) | 0.002 Gwei | 0.00000015 ETH |
+| Fuku-Gen             | 36,800 / 88,382 (42%)  | 0.002 Gwei | 0.00000007 ETH |
