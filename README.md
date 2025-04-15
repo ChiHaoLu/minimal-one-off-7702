@@ -74,7 +74,7 @@ Without waiting here, do the Fuku-Gen instantly...
   yParity: 0
 }
 Fuku-Gen 7702 Transaction hash: 0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604
-Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
+Bytecode after Fuku-Gen:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
 ```
 
 #### Scenario 2
