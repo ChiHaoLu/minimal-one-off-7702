@@ -29,13 +29,6 @@
    - Execute complex operations, such as `approve` and token swaps on DEXs.
 4. A second 7702 transaction can be sent for **FUKU-GEN**: to revoke the authorization. If the `address` field is set to `0x0000000000000000000000000000000000000000`, the previous authorization is invalidated.
 
-## Toward a Single 7702 Transaction Solution
-
-> Our goal is to compress the above three steps into a single 7702 transaction.
-
-1. **Customized 7702 Account**: By introducing a revocation flag or variable in the account contract, revocation logic can be validated during the transaction's verification phase. A call to revoke can then be embedded in the multicall batch.
-2. **Use Flashbots Bundles**: Leverage [Flashbots’ bundle API](https://docs.flashbots.net/guide-send-tx-bundle) to simulate atomic execution. **RESULT**: `shortMessage: 'unsupported transaction type'`.
-
 ## Rationale
 
 ### Paid by Relay
@@ -82,7 +75,7 @@ Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
 
 #### Scenario 2
 
-If we sent two 7702 transaction with **an interval (which means we wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2)'s [gas profile](https://dashboard.tenderly.co/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2) can shows from the perspective of CA.
+If we send two 7702 transaction with **an interval (which means we wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2)'s [gas profile](https://dashboard.tenderly.co/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2) can shows from the perspective of CA.
 
 ![alt text](./assets/0xfd.png)
 
@@ -113,7 +106,7 @@ Wait for few minutes...
   yParity: 0
 }
 Fuku-Gen 7702 Transaction hash: 0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1
-Bytecode after Fuku-Gen:  undefined
+Bytecode after Fuku-Gen:  undefined <- there is no code on EOA address
 ```
 
 ## Gas Profile
@@ -126,3 +119,10 @@ Bytecode after Fuku-Gen:  undefined
 | [Fuku-Gen](https://sepolia.etherscan.io/tx/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)                 | 36,800 / 88,382 (42%)  | 0.002 Gwei | 0.00000007 ETH  |
 
 We can see that compressing the Hen-Shin and target operation (included in MultiCall) could save `36,837 + 59,608 - 79,608 = 16,837` gas usage.
+
+## Potential Solution Toward a Single 7702 Transaction
+
+Our goal is to compress the above three steps (HEN-SHIN, target operation, FUKU-GEN) into a single 7702 transaction. We can try below methods to achieve the requirement.
+
+1. **Customized 7702 Account**: By introducing a revocation flag or variable in the account contract, revocation logic can be validated during the transaction's verification phase. A call to revoke can then be embedded in the multicall batch.
+2. **Use Flashbots Bundles**: Leverage [Flashbots’ bundle API](https://docs.flashbots.net/guide-send-tx-bundle) to simulate atomic execution. **RESULT**: `shortMessage: 'unsupported transaction type'`.
