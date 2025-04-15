@@ -47,27 +47,6 @@ async function main() {
       }),
     },
   ];
-  const txHash = await walletClient.sendTransaction({
-    authorizationList: [henShinAuthorization],
-    to: walletClient.account.address,
-  });
-  await publicClient.waitForTransactionReceipt({
-    hash: txHash,
-  });
-  console.log(`Hen-Shin 7702 Transaction hash: ${txHash}`);
-  const callTxHash = await walletClient.sendTransaction({
-    data: encodeFunctionData({
-      abi: Simple7702AccountMetadata.abi,
-      functionName: "executeBatch",
-      args: [calls],
-    }),
-    to: walletClient.account.address,
-  });
-  await publicClient.waitForTransactionReceipt({
-    hash: callTxHash,
-  });
-  console.log(`Multicall Transaction hash: ${callTxHash}`);
-  return 
   const henShinTxHash = await walletClient.sendTransaction({
     authorizationList: [henShinAuthorization],
     data: encodeFunctionData({
