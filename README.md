@@ -34,7 +34,7 @@
 > Our goal is to compress the above three steps into a single 7702 transaction.
 
 1. **Customized 7702 Account**: By introducing a revocation flag or variable in the account contract, revocation logic can be validated during the transaction's verification phase. A call to revoke can then be embedded in the multicall batch.
-2. **Use Flashbots Bundles**: Leverage [Flashbots’ bundle API](https://docs.flashbots.net/guide-send-tx-bundle) to simulate atomic execution.
+2. **Use Flashbots Bundles**: Leverage [Flashbots’ bundle API](https://docs.flashbots.net/guide-send-tx-bundle) to simulate atomic execution. **RESULT**: `shortMessage: 'unsupported transaction type'`.
 
 ## Rationale
 

@@ -1,11 +1,10 @@
-import * as dotenv from "dotenv";
 import { Address, encodeFunctionData, erc20Abi, zeroAddress } from "viem";
 import { Simple7702AccountMetadata } from "./artifacts";
 import { eoa, publicClient, walletClient } from "./utils/config";
 import { Call } from "utils/types";
 import { waitForDeposit } from "utils/helper";
+import { sendFlashbotsBundle } from "flashbot/flashbot";
 
-dotenv.config();
 const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238" as Address;
 const tokenRecipient = "0x4d7f573039fddc84fdb28515ba20d75ef6b987ff" as Address;
 const transferAmount = 100n; // 0.0001 USDC
@@ -47,6 +46,24 @@ async function main() {
       }),
     },
   ];
+
+  // await sendFlashbotsBundle(
+  //   walletClient.account.address,
+  //   encodeFunctionData({
+  //     abi: Simple7702AccountMetadata.abi,
+  //     functionName: "executeBatch",
+  //     args: [calls],
+  //   }),
+  //   [henShinAuthorization],
+  //   [
+  //     await walletClient.signAuthorization({
+  //       executor: "self",
+  //       contractAddress: zeroAddress,
+  //       nonce: henShinAuthorization.nonce + 1
+  //     }),
+  //   ]
+  // );
+  
   const henShinTxHash = await walletClient.sendTransaction({
     authorizationList: [henShinAuthorization],
     data: encodeFunctionData({

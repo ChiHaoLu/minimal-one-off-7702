@@ -8,13 +8,14 @@ dotenv.config();
 const FLASHBOTS_URL = "https://relay-sepolia.flashbots.net";
 
 export async function sendFlashbotsBundle(
-  privateKey: string,
   toAddress: Address,
   data: Hex,
-  authorizationList1: [],
-  authorizationList2: []
+  authorizationList1: any[],
+  authorizationList2: any[]
 ) {
-  const wallet = new ethers.Wallet(privateKey);
+  const wallet = new ethers.Wallet(
+    (process.env.EOA_PRIVATE_KEY as string).slice(2)
+  );
   const nonce = await publicClient.getTransactionCount({
     address: wallet.address as Address,
   });
@@ -25,7 +26,7 @@ export async function sendFlashbotsBundle(
     authorizationList: authorizationList1,
     to: toAddress,
     data: data,
-    gasLimit: 150000,
+    gasLimit: 100000,
     maxFeePerGas: (gasPrice * 150n) / 100n,
     maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
     nonce,
@@ -35,7 +36,7 @@ export async function sendFlashbotsBundle(
   const tx2 = {
     authorizationList: authorizationList2,
     to: toAddress,
-    gasLimit: 150000,
+    gasLimit: 100000,
     maxFeePerGas: (gasPrice * 150n) / 100n,
     maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
     nonce: nonce + 1,
