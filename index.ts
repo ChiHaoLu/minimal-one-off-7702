@@ -1,75 +1,22 @@
-import { Address, encodeFunctionData, erc20Abi, zeroAddress } from "viem";
+import { Address, encodeFunctionData, zeroAddress } from "viem";
 import { Simple7702AccountMetadata } from "./artifacts";
 import { eoa, publicClient, walletClient } from "./utils/config";
-import { Call } from "utils/types";
-import { waitForDeposit } from "utils/helper";
-import { sendFlashbotsBundle } from "flashbot/flashbot";
-
-const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238" as Address;
-const tokenRecipient = "0x4d7f573039fddc84fdb28515ba20d75ef6b987ff" as Address;
-const transferAmount = 100n; // 0.0001 USDC
+import { preprocess, targetCalls } from "utils/preprocess";
 
 async function main() {
-  await waitForDeposit(
-    "sending 7702 transaction by EOA",
-    eoa.address,
-    "0.01 ETH"
-  );
-  await waitForDeposit(
-    "perfoming example token usage",
-    eoa.address,
-    `0.001 USDC`
-  );
+  await preprocess(eoa.address);
 
   const henShinAuthorization = await walletClient.signAuthorization({
     executor: "self",
     contractAddress: Simple7702AccountMetadata.address as Address,
   });
   console.log(henShinAuthorization);
-  const calls: Call[] = [
-    {
-      target: USDC_ADDRESS,
-      value: 0n,
-      data: encodeFunctionData({
-        abi: erc20Abi,
-        functionName: "approve",
-        args: [tokenRecipient, transferAmount],
-      }),
-    },
-    {
-      target: USDC_ADDRESS,
-      value: 0n,
-      data: encodeFunctionData({
-        abi: erc20Abi,
-        functionName: "transferFrom",
-        args: [eoa.address, tokenRecipient, transferAmount],
-      }),
-    },
-  ];
-
-  // await sendFlashbotsBundle(
-  //   walletClient.account.address,
-  //   encodeFunctionData({
-  //     abi: Simple7702AccountMetadata.abi,
-  //     functionName: "executeBatch",
-  //     args: [calls],
-  //   }),
-  //   [henShinAuthorization],
-  //   [
-  //     await walletClient.signAuthorization({
-  //       executor: "self",
-  //       contractAddress: zeroAddress,
-  //       nonce: henShinAuthorization.nonce + 1
-  //     }),
-  //   ]
-  // );
-  
   const henShinTxHash = await walletClient.sendTransaction({
     authorizationList: [henShinAuthorization],
     data: encodeFunctionData({
       abi: Simple7702AccountMetadata.abi,
       functionName: "executeBatch",
-      args: [calls],
+      args: [targetCalls],
     }),
     to: walletClient.account.address,
   });
