@@ -114,7 +114,11 @@ Bytecode after Fuku-Gen:  undefined
 
 ## Gas Profile
 
-| Operaion             | Gas Usage              | Gas Price  | Gas Cost       |
-| -------------------- | ---------------------- | ---------- | -------------- |
-| Hen-Shin + MultiCall | 79,608 / 303,426 (26%) | 0.002 Gwei | 0.00000015 ETH |
-| Fuku-Gen             | 36,800 / 88,382 (42%)  | 0.002 Gwei | 0.00000007 ETH |
+| Operaion                                                                                                                       | Gas Usage              | Gas Price  | Gas Cost        |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------- | ---------- | --------------- |
+| [Hen-Shin](https://sepolia.etherscan.io/tx/0xda96a07ad2ff6b690468b928fd9ee580cddcaee5c5e5188efa0b23ab5ce5de73)                 | 36,837 / 88,848 (41%)  | 0.002 Gwei | 0.000000073 ETH |
+| [MultiCall after Hen-Shin](https://sepolia.etherscan.io/tx/0xccec20d51edb7b4b58d94031a4ef07ae391a8635d291203cc76b5119f98d7f47) | 59,608 / 78,029 (76%)  | 0.002 Gwei | 0.00000012 ETH  |
+| [Hen-Shin + MultiCall](https://sepolia.etherscan.io/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2)     | 79,608 / 303,426 (26%) | 0.002 Gwei | 0.00000015 ETH  |
+| [Fuku-Gen](https://sepolia.etherscan.io/tx/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)                 | 36,800 / 88,382 (42%)  | 0.002 Gwei | 0.00000007 ETH  |
+
+We can see that compressing the Hen-Shin and target operation (included in MultiCall) could save `36,837 + 59,608 - 79,608 = 16,837` gas usage.
