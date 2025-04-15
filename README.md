@@ -48,7 +48,7 @@ If your 7702 transaction gas is paid by the relay, you need to use the EntryPoin
 
 If we sent two 7702 transaction in **very short interval (which means we don't wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49)'s [gas profile](https://dashboard.tenderly.co/tx/0xc64224c6db9c8312f7237bfac1c981210a8e6fb635ce09a9243a61adf491bf49) only shows from the perspective of EOA and it can not perform the ERC-20 interaction.
 
-![alt text](https://github.com/ChiHaoLu/minimal-one-off-7702/assets/0xc6.png)
+![alt text](./assets/0xc6.png)
 
 And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604) could not be sent successfully.
 
@@ -84,7 +84,7 @@ Bytecode after Hen-Shin:  0xef01004cd241e8d1510e30b2076397afc7508ae59c66c9
 
 If we sent two 7702 transaction with **an interval (which means we wait for the block confirmed)**, the [first transaction](https://sepolia.etherscan.io/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2)'s [gas profile](https://dashboard.tenderly.co/tx/0xfd55a48a49901578b4e0c0ac96724360130a5c5a68905d6df0022c90d8e2e0c2) can shows from the perspective of CA.
 
-![alt text](https://github.com/ChiHaoLu/minimal-one-off-7702/assets/0xfd.png)
+![alt text](./assets/0xfd.png)
 
 And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)([gas profile](https://dashboard.tenderly.co/tx/sepolia/0x491f886bc5c3786506f70fa3f520406fa39f0bb6c965cfcdbc1b60221cba70e1)) can be sent successfully.
 
