@@ -47,7 +47,7 @@ If we sent two 7702 transaction in **very short interval (which means we don't w
 
 ![alt text](./assets/0xc6.png)
 
-And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604) could not be sent successfully.
+And the [second 7702 transaction](https://sepolia.etherscan.io/tx/0x843500d6d01b091d20183026a397d3a6fa29fc19b56d1e9516ad26e2744f4604) could not be sent successfully. It's because the `nonce` `339` and `340` should be used by Fuku-Gen (second) 7702 transaction (first for authorization, second for target operation in `data`). It leads to that the `nonce` in production of second 7702 transaction is not correct.
 
 ```
 {
@@ -128,5 +128,6 @@ We can see that compressing the Hen-Shin and target operation (included in Multi
 
 Our goal is to compress the above three steps (HEN-SHIN, target operation, FUKU-GEN) into a single 7702 transaction. We can try below methods to achieve the requirement.
 
+1. Theoretically, if we fixed the nonce usage for delegated EOA. We can MANDATORY the transaction after Hen-Shin 7702 Transaction MUST be Fuku-Gen 7702 Transaction.
 1. **Customized 7702 Account**: By introducing a revocation flag or variable in the account contract, revocation logic can be validated during the transaction's verification phase. A call to revoke can then be embedded in the multicall batch.
 2. **Use Flashbots Bundles**: Leverage [Flashbots’ bundle API](https://docs.flashbots.net/guide-send-tx-bundle) to simulate atomic execution. **RESULT**: `shortMessage: 'unsupported transaction type'`.
